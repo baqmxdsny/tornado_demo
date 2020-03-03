@@ -3,8 +3,7 @@ import time
 import tornado
 import asyncio
 
-from apps.foo.handlers.base import BaseHandler
-from tornado.httpclient import AsyncHTTPClient
+from utils.base import BaseHandler
 from tornado import gen, web
 
 from concurrent.futures import ThreadPoolExecutor

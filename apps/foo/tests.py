@@ -13,4 +13,4 @@ def geturl(url):
      e = time.time()
      print(int(e-s))
 
-geturl(r"http://127.0.0.1:8000/?q=yangyanxing")
+geturl(r"http://127.0.0.1:8898/foo/Syncsleep")
