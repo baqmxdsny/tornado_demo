@@ -1,4 +1,4 @@
-tornado-boilerplate -- a standard layout for Tornado apps
+tornado-demo -- a standard layout for Tornado apps
 ===============================================================================
 
 ## Description
@@ -25,28 +25,31 @@ were the primary inspiration for this layout.
 
 ## Directory Structure
 
-    tornado-boilerplate/
-        handlers/
-            foo.py
-            base.py
-        lib/
-        logconfig/
-        media/
+    tornado_demo/
+        apps           #    项目应用
+            foo         
+                handlers/      # 逻辑
+                    foo.py
+                    base.py
+                tasks.py    #   定时任务
+                urls.py     #   子项目路由
+        logconfig/  #   日志配置
+        media/      #   静态文件
             css/
                 vendor/
             js/
                 vendor/
             images/
-        requirements/
-            common.txt
-            dev.txt
-            production.txt
-        templates/
-        vendor/
-        environment.py
-        fabfile.py
-        app.py
-        settings.py
+        requirements/   #   插件安装（解决生产环境与测试环境系统不一致导致插件版本不存在问题）
+            common.txt  #   通用
+            dev.txt         # 测试环境
+            production.txt  # 生产环境
+        templates/      #   模板
+        environment.py  #   运行环境
+        fabfile.py  
+        app.py      #   系统入口
+        settings.py     # 系统设置，全局变量
+        urls.py     #   系统总路由
 
 ### handlers
 
@@ -142,22 +145,6 @@ look at the documentation indicates that this basic template is compatible, but
 none of our Tornado applications are using templates at the moment, so it hasn't
 been tested.
 
-### vendor
-
-Python package dependencies loaded as git submodules. pip's support for git
-repositories is somewhat unreliable, and if the specific package is your own
-code it can be a bit easier to debug if it's all in one place (and not off in a
-virtualenv).
-
-At Bueda we collect general webapp helpers and views in the separate package
-`comrade` and share it among all of our applications. It is included here as an
-example of a Python package as a git submodule (comrade itself should't be
-considered part of this boilerplate - while it might be useful, it's much less
-generic).
-
-Any directory in `vendor/` is added to the `PYTHONPATH` by `environment.py`. The
-packages are *not* installed with pip, however, so if they require any
-compilation (e.g. C/C++ extensions) this method will not work.
 
 ### Files
 
@@ -198,6 +185,5 @@ If you have improvements or bug fixes:
 
 ## Authors
 
-* [Bueda Inc.](http://www.bueda.com)
-* Christopher Peplin, peplin@bueda.com, @[peplin](http://twitter.com/peplin)
-* Aman Guatam
+* [陈军辉](http://www.shaonian.site)
+*  [Github](https://github.com/baqmxdsny)
