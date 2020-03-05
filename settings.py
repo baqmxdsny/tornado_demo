@@ -2,6 +2,8 @@ import logging
 import tornado
 import tornado.template
 import os
+
+from sqlalchemy.ext.declarative import declarative_base
 from tornado.options import define, options
 from sqlalchemy import create_engine
 import cx_Oracle as orl
@@ -83,7 +85,7 @@ if options.config:
 system_order = "PRODUCTION"  # 生产环境变量名称
 
 settings_files = os.environ.get(system_order)  # 获取系统环境变量PRODUCTION
-settings_files = "production"
+settings_files = "productio"
 if settings_files == "production":
     DEBUG = False  # 生产环境关闭DEBUG
 else:
@@ -132,3 +134,4 @@ ORL_URL = "{}/{}@{}:{}/{}".format(
     DATABASES['default']['NAME']
 )
 db_engine=create_engine(DB_URL, echo=True)
+Base = declarative_base()

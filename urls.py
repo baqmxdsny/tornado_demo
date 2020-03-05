@@ -3,4 +3,6 @@ from utils.urlparse import include, url_wrapper
 
 url_patterns = url_wrapper([
     (r"/foo", include('apps.foo.urls')),
+    (r"/users", include('apps.users.urls')),
+
 ])

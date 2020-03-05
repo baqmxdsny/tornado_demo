@@ -1,10 +1,10 @@
 import json
 import tornado.web
-from settings import db_engine
+from settings import db_engine, Base
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
-Base = declarative_base()
+
 import logging
 logger = logging.getLogger('boilerplate.' + __name__)
 
@@ -15,20 +15,9 @@ class BaseHandler(tornado.web.RequestHandler):
     """A class to collect common handler methods - all other handlers should
     subclass this one.
     """
-    def initialize(self):
-        """
-            提供数据库，通过setting文件中的数据库设置
-        """
-        self.db_engine = db_engine
-
-
-    def set_db(self, database):
-        """
-            提供数据库，通过参数传递数据库
-        :param database:
-        :return:
-        """
-        self.db_engine = database
+    @property
+    def db(self):
+        return self.application.orm_db
 
     def load_json(self):
         """Load JSON from the request body and store them in

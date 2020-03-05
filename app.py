@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-
+'''
+    时间教会了我们很多东西，有些我们曾经认为根本没有的，后来发现它确确实实存在，有些我们深信不疑的，后来却明白根本就没有。
+'''
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
