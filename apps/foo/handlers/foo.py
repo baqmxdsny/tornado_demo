@@ -84,7 +84,7 @@ class CelerySleepHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def get(self):
         print(7)
-        response = yield gen.Task(tasks.sleep_fun.apply_async, args=[5])
+        # response = yield gen.Task(tasks.sleep_fun.apply_async, args=[5])
         print(8)
 
         self.write("when i sleep 10s")
@@ -98,5 +98,17 @@ class AsynchronousSleepHandler(BaseHandler):
         print(6)
         self.write("when i sleep 10s")
 
+        conection = self.database.connect()
+        result = conection.execute('select * from django_migrations')
+        print(result.fetchone())
+
+class DbSelect(BaseHandler):
+
+    async def get(self):
+        '''
+            数据库操作
+        :return:
+        '''
+        result =  await self.query('select * from django_migrations')
 
 

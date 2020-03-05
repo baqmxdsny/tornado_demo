@@ -1,5 +1,6 @@
 
-from .handlers.foo import FooHandler, SleepHandler, SyncSleepHandler, NoSleepHandler, ThreadSleepHandler, CelerySleepHandler, AsynchronousSleepHandler
+from .handlers.foo import FooHandler, SleepHandler, SyncSleepHandler, NoSleepHandler, \
+    ThreadSleepHandler, CelerySleepHandler, AsynchronousSleepHandler, DbSelect
 
 url_patterns = [
     (r"/Too", FooHandler),
@@ -9,5 +10,6 @@ url_patterns = [
     (r"/Syncsleep", SyncSleepHandler),
     (r"/Celerysleep", CelerySleepHandler),
     (r"/Asynchronoussleep", AsynchronousSleepHandler),
+    (r"/DbSelect", DbSelect),
 
 ]

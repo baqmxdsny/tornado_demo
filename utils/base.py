@@ -1,6 +1,10 @@
 import json
 import tornado.web
-
+from settings import db_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+Base = declarative_base()
 import logging
 logger = logging.getLogger('boilerplate.' + __name__)
 
@@ -11,6 +15,20 @@ class BaseHandler(tornado.web.RequestHandler):
     """A class to collect common handler methods - all other handlers should
     subclass this one.
     """
+    def initialize(self):
+        """
+            提供数据库，通过setting文件中的数据库设置
+        """
+        self.db_engine = db_engine
+
+
+    def set_db(self, database):
+        """
+            提供数据库，通过参数传递数据库
+        :param database:
+        :return:
+        """
+        self.db_engine = database
 
     def load_json(self):
         """Load JSON from the request body and store them in
@@ -46,10 +64,10 @@ class BaseHandler(tornado.web.RequestHandler):
         logger.debug("Found '%s': %s in JSON arguments" % (name, arg))
         return arg
 
-    def row_to_obj(self, row, cur):
+    def row_to_obj(self, row, execute):
         """Convert a SQL row to an object supporting dict and attribute access."""
         obj = tornado.util.ObjectDict()
-        for val, desc in zip(row, cur.description):
+        for val, desc in zip(row, execute.cursor.description):
             obj[desc.name] = val
         return obj
 
@@ -57,8 +75,7 @@ class BaseHandler(tornado.web.RequestHandler):
         """Execute a SQL statement.
         Must be called with ``await self.execute(...)``
         """
-        with (await self.application.db.cursor()) as cur:
-            await cur.execute(stmt, args)
+        execute = self.db_engine.execute(stmt, args)
 
     async def query(self, stmt, *args):
         """Query for a list of results.
@@ -67,9 +84,10 @@ class BaseHandler(tornado.web.RequestHandler):
         Or::
             for row in await self.query(...)
         """
-        with (await self.application.db.cursor()) as cur:
-            await cur.execute(stmt, args)
-            return [self.row_to_obj(row, cur) for row in await cur.fetchall()]
+        execute = self.db_engine.execute(stmt, args)
+        list = self.dictfetchall(execute)
+        execute.close()
+        return list
 
     async def queryone(self, stmt, *args):
         """Query for exactly one result.
@@ -94,3 +112,23 @@ class BaseHandler(tornado.web.RequestHandler):
 
     async def any_author_exists(self):
         return bool(await self.query("SELECT * FROM authors LIMIT 1"))
+
+    def dictfetchall(self, execute):
+        "将游标返回的结果保存到一个字典对象中"
+        desc = execute.cursor.description
+        return [
+            dict(zip([col[0] for col in desc], row))
+            for row in execute.fetchall()
+        ]
+
+
+class BaseModel(Base):
+    '''
+        ORM模型基类
+
+    '''
+    __abstract__ = True
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    create_time = Column(DateTime, default=datetime.now)  # 该字段创建时间属性,不可被修改
+    update_time = Column(DateTime, default=datetime.now, onupdate=datetime.now)  # 该字段每一次更新数据,就会给出时间

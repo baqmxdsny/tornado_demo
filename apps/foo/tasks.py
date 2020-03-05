@@ -17,5 +17,3 @@ def sleep_fun(second):
     time.sleep(second)
     return 'ok'
 
-if __name__ == "__main__":
-    app.start()
