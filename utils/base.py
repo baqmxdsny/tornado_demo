@@ -64,19 +64,31 @@ class BaseHandler(tornado.web.RequestHandler):
         """Execute a SQL statement.
         Must be called with ``await self.execute(...)``
         """
-        execute = self.db_engine.execute(stmt, args)
+        execute = self.db.execute(stmt, args)
 
-    async def query(self, stmt, *args):
+    def query(self, stmt, *args):
         """Query for a list of results.
         Typical usage::
             results = await self.query(...)
         Or::
             for row in await self.query(...)
         """
-        execute = self.db_engine.execute(stmt, args)
+        execute = self.db.execute(stmt, args)
         list = self.dictfetchall(execute)
         execute.close()
         return list
+
+    def insert(self, stmt, *args):
+        """Query for a list of results.
+        Typical usage::
+            results = await self.query(...)
+        Or::
+            for row in await self.query(...)
+        """
+        execute = self.db.execute(stmt, args)
+        return execute
+        # event_id = execute.lastrowid
+        # return event_id
 
     async def queryone(self, stmt, *args):
         """Query for exactly one result.

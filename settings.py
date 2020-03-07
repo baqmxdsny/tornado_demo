@@ -47,7 +47,7 @@ settings = {}
 settings['debug'] = DEPLOYMENT != DeploymentType.PRODUCTION or options.debug
 settings['static_path'] = MEDIA_ROOT
 settings['cookie_secret'] = "your-cookie-secret"
-settings['xsrf_cookies'] = True
+settings['xsrf_cookies'] = False
 settings['template_loader'] = tornado.template.Loader(TEMPLATE_ROOT)
 
 SYSLOG_TAG = "boilerplate"
@@ -119,7 +119,7 @@ else:  # 开发环境
         }
     }
 
-DB_URL = 'oracle://{}:{}@{}:{}/?service_name={}'.format(
+DB_URL = 'oracle+cx_oracle://{}:{}@{}:{}/?service_name={}'.format(
     DATABASES['default']['USER'],
     DATABASES['default']['PASSWORD'],
     DATABASES['default']['HOST'],
@@ -133,5 +133,6 @@ ORL_URL = "{}/{}@{}:{}/{}".format(
     DATABASES['default']['PORT'],
     DATABASES['default']['NAME']
 )
-db_engine=create_engine(DB_URL, echo=True)
+db_engine=create_engine(DB_URL, echo=True, max_overflow=5,implicit_returning=True)
+db = orl.Connection(ORL_URL)
 Base = declarative_base()
